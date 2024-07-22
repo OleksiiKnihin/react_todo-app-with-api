@@ -121,7 +121,7 @@ export const App: React.FC = () => {
   const completedTodos = todos.filter(todo => todo.completed);
 
   function handleToggleAll() {
-    if (activeTodos.length > 0) {
+    if (activeTodos.length) {
       setLoadingIds([...activeTodos.map(todo => todo.id)]);
       Promise.all(
         activeTodos.map(todo => {
@@ -192,7 +192,6 @@ export const App: React.FC = () => {
           loadingIds={loadingIds}
         />
 
-        {/* Hide the footer if there are no todos */}
         {todos.length > 0 && (
           <Footer
             todos={todos}

@@ -49,8 +49,8 @@ export const TodoItem: React.FC<Props> = ({
       return;
     }
 
-    onEdit(id, { title: editedTitle.trim() }).then(res =>
-      setIsEditing(!!res?.error),
+    onEdit(id, { title: editedTitle.trim() }).then(response =>
+      setIsEditing(!!response?.error),
     );
   };
 
@@ -88,7 +88,6 @@ export const TodoItem: React.FC<Props> = ({
         </span>
       )}
 
-      {/* Remove button appears only on hover */}
       {!isEditing && (
         <button
           type="button"
@@ -100,7 +99,6 @@ export const TodoItem: React.FC<Props> = ({
         </button>
       )}
 
-      {/* overlay will cover the todo while it is being deleted or updated */}
       <div
         data-cy="TodoLoader"
         className={classNames('modal overlay', {
