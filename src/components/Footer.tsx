@@ -7,7 +7,7 @@ interface Props {
   typeFilter: FilterType;
   setTypeFilter: (typeFilter: FilterType) => void;
   isAllActive: boolean;
-  handleDeleteTodo: (id: number) => void;
+  onDeleteCompleted: () => void;
 }
 
 export const Footer: React.FC<Props> = ({
@@ -15,15 +15,16 @@ export const Footer: React.FC<Props> = ({
   typeFilter,
   setTypeFilter,
   isAllActive,
-  handleDeleteTodo,
+  onDeleteCompleted,
 }) => {
   const activeTodosCount = todos.filter(todo => !todo.completed).length;
 
-  function handleDeleteAllCompleted() {
-    const allCompletedTodos = todos.filter(todo => todo.completed);
+  let isDeletionCompleted = false;
 
-    allCompletedTodos.map(todo => handleDeleteTodo(todo.id));
-  }
+  const handleDeleteCompleted = () => {
+    isDeletionCompleted = true;
+    onDeleteCompleted();
+  };
 
   return (
     <footer className="todoapp__footer" data-cy="Footer">
@@ -70,8 +71,8 @@ export const Footer: React.FC<Props> = ({
         type="button"
         className="todoapp__clear-completed"
         data-cy="ClearCompletedButton"
-        disabled={isAllActive}
-        onClick={handleDeleteAllCompleted}
+        disabled={isDeletionCompleted || isAllActive}
+        onClick={handleDeleteCompleted}
       >
         Clear completed
       </button>

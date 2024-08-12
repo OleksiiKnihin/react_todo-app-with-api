@@ -117,6 +117,31 @@ export const App: React.FC = () => {
       });
   }
 
+  const handleDeleteCompletedTodos = () => {
+    const completedTodos = todos.filter(todo => todo.completed);
+    const activeTodos = todos.filter(todo => todo.completed);
+
+    setLoadingIds([...activeTodos.map(todo => todo.id)]);
+
+    Promise.allSettled(
+      completedTodos.map(todo => deleteTodo(todo.id).then(() => todo)),
+    )
+      .then(values => {
+        values.map(value => {
+          if (value.status === 'rejected') {
+            setErrorMessage(ErrorMessage.UnableToDelete);
+          } else {
+            setTodos(prevTodos => {
+              const todoID = value.value as Todo;
+
+              return prevTodos.filter(todo => todo.id !== todoID.id);
+            });
+          }
+        });
+      })
+      .finally(() => setLoadingIds([]));
+  };
+
   const activeTodos = todos.filter(todo => !todo.completed);
   const completedTodos = todos.filter(todo => todo.completed);
 
@@ -168,7 +193,7 @@ export const App: React.FC = () => {
 
   return (
     <div className="todoapp">
-      <h1 className="todoapp__title">todos</h1>
+      <h1 className="todoapp__title">Your todos</h1>
 
       <div className="todoapp__content">
         <Header
@@ -198,7 +223,7 @@ export const App: React.FC = () => {
             typeFilter={typeFilter}
             setTypeFilter={setTypeFilter}
             isAllActive={todos.every(todo => !todo.completed)}
-            handleDeleteTodo={handleDeleteTodo}
+            onDeleteCompleted={handleDeleteCompletedTodos}
           />
         )}
       </div>
